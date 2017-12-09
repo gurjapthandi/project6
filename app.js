@@ -9,7 +9,9 @@ var fs = require('fs');
 var jsonfile = require('jsonfile');
 var bcrypt = require('bcrypt');
 
-const saltRounds = 5;
+
+
+const saltRounds = 10;
 
 /** Stores users as JSON */
 var userfile = "users.txt";
@@ -86,11 +88,13 @@ app.post('/adduser', function(req, res) {
     // storing users in file
     bcrypt.genSalt(saltRounds, function(err, salt) {
         bcrypt.hash(req.body.password, salt, function(err, hash) {
+
             var userdata = {
                 name: req.body.name,
                 password: hash,
                 twofactor: "disabled"
             };
+
             jsonfile.readFile(userfile, function(er, data) {
                 data.push(userdata);
                 jsonfile.writeFile(userfile, data, (err) => {
